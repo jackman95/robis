@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<style type="text/css">
+    .form-signin {
+      max-width: 330px;
+      padding: 1rem;
+    }
+    
+    .form-signin .form-floating:focus-within {
+      z-index: 2;
+    }
+    
+    .form-signin input {
+      margin-bottom: 10px;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+
+    .form-signin input[type="index"] {
+      margin-bottom: 20px;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+    .h3{
+		text-align:center;
+	} 
+    </style>
+    
+    <main class="form-signin w-100 m-auto">
+
+      {% if success_message_acc_update %}
+      <div class="alert alert-success">{{success_message_acc_update}}</div>
+      {% endif %}
+
+        <form method="post"> {% csrf_token %}
+          <h1 class="h3 mb-3 fw-normal">Nastavení účtu</h1>
+      
+          <div class="form-floating">
+            <input type="email" name="email" class="form-control" id="inputEmail" placeholder="jmeno@skradiosport.cz" value="{{account_form.initial.email}}">
+            <label for="floatingInput">Email</label>
+          </div>
+          <div class="form-floating">
+            <input type="text" name="username" class="form-control" id="inputUsername" placeholder="novak" value="{{account_form.initial.username}}">
+            <label for="floatingInput">Uživatelské jméno</label>
+          </div>
+          <div class="form-floating">
+            <input type="text" name="first_name" class="form-control" id="inputFirst_name" placeholder="Jan" value="{{account_form.initial.first_name}}">
+            <label for="floatingInput">Křestní jméno</label>
+          </div>
+          <div class="form-floating">
+            <input type="text" name="second_name" class="form-control" id="inputSecond_name" placeholder="Novák" value="{{account_form.initial.second_name}}">
+            <label for="floatingInput">Příjmení</label>
+          </div>
+          <div class="form-floating">
+            <input type="text" name="si_number" class="form-control" id="inputsi_number" placeholder="2042538" value="{{account_form.initial.si_number}}">
+            <label for="floatingInput">Číslo čipu</label>
+          </div><!--
+          <div class="form-floating">
+            <input type="text" name="index" class="form-control" id="inputIndex" placeholder="GBM5012" value="{{account_form.initial.index}}">
+            <label for="floatingInput">Index</label>
+          </div>-->
+          <div class="form-floating">
+            <input style="background-color:rgb(182, 182, 182);" name="index" type="text" class="form-control" id="disabledTextInput" placeholder="GBM5012" value="{{account_form.initial.index}}">
+            <label style="color:black" for="disabledTextInput">Index</label>
+          </div>
+          <!--<div class="form-floating">
+            <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Heslo123">
+            <label for="floatingPassword">Heslo</label>
+          </div>-->
+
+          <div class="form-floating">
+            <input readonly style="background-color: rgb(182, 182, 182);" type="text" class="form-control" id="inputClub" value="{{user.club}}">
+            <label for="inputClub">Oddíl</label>
+        </div>
+        <div class="form-floating">
+            <input readonly style="background-color: rgb(182, 182, 182);" type="text" class="form-control" id="inputAge" value="{{user.age}}">
+            <label for="inputAge">Věk</label>
+        </div>
+        <div class="form-floating">
+            <input readonly style="background-color: rgb(182, 182, 182);" type="text" class="form-control" id="inputSex" value="{{user.get_sex_display}}">
+            <label for="inputSex">Pohlaví</label>
+        </div>
+
+    
+          {% for field in login_form %}
+          <p>
+              {% for error in field.errors %}
+              <p style="color: red;">{{error}}</p>
+              {% endfor %}
+          </p>
+          {% endfor %}
+      
+          {% if login_form.non_field_errors %}
+          <div style="color:red;">
+              <p>{{login_form.non_field_errors}}</p>
+          </div>
+          {% endif %}
+         
+          <button class="btn btn-primary w-100 py-2" type="submit">Uložit</button>
+        </form>
+        <div class="d-flex flex-column py-2">
+        <a href="{% url 'password_change' %}" class="m-auto">Změňit heslo</a>
+        </div>
+      </main>
+      
+{% endblock content %}

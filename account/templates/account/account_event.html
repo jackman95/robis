@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style type="text/css">
+
+    
+    .themed-grid-col {
+      padding-top: .25rem;
+      padding-bottom: .25rem;
+      background-color: rgba(112, 131, 233, 0.15);
+      border: 1px solid rgba(44, 47, 249, 0.3);
+        }
+
+    .upcoming {
+		background-color: rgba(34, 212, 93, 0.15)!important;
+	}
+</style>
+<div class="container-lg">  
+	
+<h3>Tvé závody</h3>
+
+<div class="row mb-3 text-center" style="clear: both;">
+	<div class="col col-md-2 themed-grid-col">Datum</div>
+	<div class="col col-md-5 themed-grid-col">Název soutěže</div>
+    <div class="col col-md-2 themed-grid-col">Kategorie</div>
+	<div class="col col-md-3 themed-grid-col">Odkazy</div>
+	<div class="container-lg m-1"></div>
+	{% if user_entries %}
+	{% for entry in user_entries %}
+	<div class="col col-md-2 themed-grid-col {% if entry.event.event_date > today %}upcoming{% endif %}">{{entry.event.event_date|date:"d.m.Y"}}</div>
+	<div class="col col-md-5 themed-grid-col {% if entry.event.event_date > today %}upcoming{% endif %}" style="text-align:left"><a href="{% url 'kalendar:event' entry.event.slug %}">{{ entry.event.title }}</a></div>
+    <div class="col col-md-2 themed-grid-col {% if entry.event.event_date > today %}upcoming{% endif %}">{{ entry.get_category_display }}</a></div>
+
+	<div class="col col-md-3 themed-grid-col {% if entry.event.event_date > today %}upcoming{% endif %}">
+		{% if entry.event.results %}
+		<a href="{{ entry.event.results.url }}" target="_blank">Výsledky</a>
+		{% else %}
+		{% if entry.event.startlist %}
+    	<a href="{{ entry.event.startlist.url }}" target="_blank">Startovka</a>,
+    	{% endif %}
+		{% if entry.event.pokyny %}
+		<a href="{{ entry.event.pokyny.url }}" target="_blank">Pokyny</a>
+		{% else %}
+		{% if entry.event.bulletin %}
+    	<a href="{{ entry.event.bulletin.url }}" target="_blank">Propozice</a>
+		{% endif %}
+    	{% endif %}
+		{% endif %}		
+		
+	</div>
+	<div class="container-lg"></div>
+
+	{% endfor %}
+	{% else %}
+	<div class="container-lg m-1">Ještě jsi se nikam nepřihlásil</div>
+	{% endif %}
+</div>
+</div>
+{% endblock %}

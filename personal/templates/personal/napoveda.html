@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style type="text/css">
+    h4 {
+        margin-bottom: 12px;
+    }
+</style>
+<div class="container-lg">
+<div class="row col-lg-12">
+    <div class="col-2">
+        <h5>Menu</h5>
+        <a href="#prihlasky" target="_self">Přihlášky</a><br>
+        <a href="#opravneni" target="_self">Uživ. oprávnění</a>
+    </div>
+    <div class="col-10">
+        <h4 id="prihlasky">Přihlášky na událost</h4>
+        <h5>Neregistrovaný uživatel</h5>
+        <ul style="list-style-type:none">
+            <li>Po rozkliknutí události klikne na přihlásit se a vyplní údaje. Přihlášku již nemůže editovat, proto si prosím před odesláním přihlášky pečlivě zkontrolujte vyplněné údaje. Změnit údaje může jen organizátor události, pokud vyplníte v přihlášce alespoň první tři písmena z indexu, tak může editovat přihlášku i předseda oddílu.</li>
+        </ul>
+        <h5>Registrovaný uživatel</h5>
+        <ul style="list-style-type:none">
+            <li>Po rozkliknutí události klikne na přihlásit se a osobní údaje se mu automaticky předvyplní podle nastavení v účtu. Přihlášku může editovat i po odeslání.</li>
+        </ul>
+        <h5>Přihlašování členů rodiny</h5>
+        <ul style="list-style-type:none">
+            <li>Lze buď zaregistrováním do robisu každého člena zvlášť a poté pod každým uživatelským účtem provést přihlášení, nebo přihlásit člena rodiny bez registrace jeho účtu podle návodu pro neregistrované uživatele. Druhá možnost neumožňuje následnou editaci přihlášky. </li>
+        </ul>
+<br>
+        <h4 id="opravneni">Uživatelská oprávnění</h4>
+
+        <h5>Sekretář/ka</h5>
+        <ul>
+            <li>Zakládá soutěže I. stupně (MČR, NŽ) a určuje pořádající oddíl, který může soutěž spravovat (zatím ne)</li>
+            <li>Zakládá akce reprezentace a ždr a spravuje je (zatím ne)</li>
+            <li>Může editovat jakoukoli událost, ale nemá přístup k přihláškám</li>
+            <li>Určuje uživatele pro uživatelské oprávnění <span style="color:rgb(255, 123, 0)">předseda oddílu</span> (zatím ne)</li>
+        </ul>
+        <h5>Předseda oddílu</h5>
+        <ul>
+            <li>Upravuje pravidla v oddíle (financování)</li>
+            <li>Má k dispozici seznam lidí z oddílu přihlášených v jakékoli soutěži a může jej editovat (zatím ne)</li>
+            <li>Určuje uživatele pro oprávnění <span style="color:rgb(255, 123, 0)">orgnizátor</span> a <span style="color:rgb(255, 123, 0)">předseda</span> ve správě oddílu</li>
+        </ul>
+        <h5>Orgaizátor</h5>
+        <ul>
+            <li>Zakládá události pod hlavičkou svého oddílu</li>
+            <li>Má přístup ke všem funkcím v události (editace, seznamy přihlášených, hromadná úprava přihlášek, nahrávání souborů)</li>
+        </ul>
+    </div>
+</div>
+</div>
+{% endblock content %}

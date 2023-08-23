@@ -1,0 +1,349 @@
+{% extends 'base.html' %}
+{% load account_tags %}
+{% load static %}
+
+{% block content %}
+
+<style type="text/css">
+  /*  @media (min-width: 1200px) {
+        .row {
+        margin-left:0px;
+        padding: 0px;
+        flex-direction: row-reverse;
+    }
+    } */
+    .themed-grid-col {
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+  background-color: rgba(119, 136, 236, 0.15);
+  border: 1px solid rgba(44, 47, 249, 0.3);
+	} 
+    .col {
+        
+        word-break:break-word;
+    }
+    input{
+        border: 1px solid rgba(44, 47, 249, 0.3);
+        
+    }
+
+</style>
+
+
+{% if success_message_create %}
+        <div class="alert alert-success">
+            {{ success_message_create }}
+        </div>
+{% endif %}
+{% if success_message_update %}
+        <div class="alert alert-success">
+            {{ success_message_update }}
+        </div>
+{% endif %}
+{% if success_message_entry %}
+        <div class="alert alert-success">
+            {{ success_message_entry }}
+        </div>
+{% endif %}
+{% if success_message_entry_delete %}
+        <div class="alert alert-success">
+            {{ success_message_entry_delete }}
+        </div>
+{% endif %}
+{% if success_message_entry_update %}
+        <div class="alert alert-success">
+            {{ success_message_entry_update }}
+        </div>
+{% endif %}
+{% if success_message_entry_cantupdate %}
+        <div class="alert alert-warning">
+            {{ success_message_entry_cantupdate }}
+        </div>
+{% endif %}
+{% if success_message_entries_update %}
+        <div class="alert alert-success">
+            {{ success_message_entries_update }}
+        </div>
+{% endif %}
+{% if success_message_entries_cantupdate %}
+        <div class="alert alert-warning">
+            {{ success_message_entries_cantupdate }}
+        </div>
+{% endif %}
+{% if success_message_entries_delete %}
+        <div class="alert alert-success">
+            {{ success_message_entries_delete }}
+        </div>
+{% endif %}
+{% if success_message_new_from_entries %}
+        <div class="alert alert-success">
+            {{ success_message_new_from_entries }}
+        </div>
+{% endif %}
+{% if success_message_create_microevent %}
+        <div class="alert alert-success">
+            {{ success_message_create_microevent }}
+        </div>
+{% endif %}
+{% if success_message_microevent_delete %}
+        <div class="alert alert-warning">
+            {{ success_message_microevent_delete }}
+        </div>
+{% endif %}
+{% if success_message_save_entry %}
+        <div class="alert alert-success">
+            {{ success_message_save_entry }}
+        </div>
+{% endif %}
+{% if success_message_save_notice %}
+        <div class="alert alert-success">
+            {{ success_message_save_notice }}
+        </div>
+{% endif %}
+
+
+    
+{% if event_detail.zprava_warning %}
+<div class="alert alert-danger" role="alert">{{event_detail.zprava_warning|safe}}</div>
+{% endif %}    
+{% if event_detail.zprava_info %}
+<div class="alert alert-primary" role="alert">{{event_detail.zprava_info|safe}}</div>
+{% endif %}
+<div class="row">
+    <!--detail kalendáře-->
+    <div class="col-md-9 mb-3">
+        <div class="card">
+          <!--  {% if event_detail.mapa %}
+            <img class="card-img-top" src="{{event_detail.mapa.url}}">
+            {% endif %}-->
+            <div class="card-body">
+
+            <h4 class="card-title text-center">{{event_detail.title}} - {{event_detail.event_date|date:"d.m.Y"}}</h4>
+            <div class="col-lg-12 mt-5 mb-3 row">       
+                <div class="col-sm-8">
+
+                Datum: {{event_detail.event_date|date:"d.m. Y"}}<br>
+                Start 00: {{ event_detail.start00|time:'H:i' }}<br>
+                Pořadatel: {{ event_detail.club }}<br>
+                Typ soutěže: {{ event_detail.get_event_type_display }} <br>
+                Disciplína: {{ event_detail.discipline }}<br>
+                Souřadnice shromaždiště: <a href="https://mapy.cz/turisticka?q={{ event_detail.gps }}" target="_blank">{{ event_detail.gps }}</a><br>
+                Kontakt na organizátora: {{ event_detail.contact }}<br>
+                </div>
+                <div class="col-sm-4">                   
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h4 class="card-title">Založ auto</h4>
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ microevent_form.as_p }}
+                            <button type="submit" name="action" value="create" class="btn btn-primary">Založ auto</button>
+                        </form>
+                    </div>
+                </div>
+                </div> 
+            </div>
+
+
+
+
+<div class="col-lg-12 row m-auto" style="clear:both">
+
+    {% if message_you_can_not_enter %}
+    <div class="alert alert-danger">
+        {{ message_you_can_not_enter }}
+    </div>
+    {% endif %}    
+
+    {% for microevent in microevents %}
+    <div class="card mx-auto col-lg-6">
+        
+        <div class="card-body">
+
+            <form method="post" style="float:right" >
+                {% csrf_token %}
+                <input type="hidden" name="microevent_id" value="{{ microevent.id }}">
+                <button type="submit" name="action" value="delete" style="float:right" class="btn btn-danger" onclick="return confirmDelete();">Smazat</button>
+            </form>
+
+            <h5 class="card-title">Automodul č. {{ microevent.id }}, míst: {{microevent.max_entries}}</h5>
+            <form method="post" class="mt-3 mb-2">
+                {% csrf_token %}
+                <input type="hidden" name="microevent_id" value="{{ microevent.id }}">
+                <input type="hidden" name="action" value="save_notice">
+                <div class="row">
+                <div class="form-group col-10">
+                    <label for="id_notice" class="form-label">{{microevent_form.notice.label_tag}}</label>
+                    <input name="notice" id="id_notice" class="form-control" value="{{ microevent.notice }}">
+                </div>
+                <button type="submit" class="col" style="border: none; background:none; float:right; margin-top:20px;"><img src="{% static 'save.png' %}" alt="save button" width="30px"></button>
+                </div>
+            </form>
+            
+            {% if microevent.microevententry_set.all %}
+            <label for="id_entry_name_{{ entry.id }}" class="form-label col-sm-5">{{ microevent_entry_form.name.label_tag }}</label>
+            <label for="id_entry_notice_name_{{ entry.id }}" class="form-label col-sm-5" style="margin-left: 20px;">{{ microevent_entry_form.notice_name.label_tag }}</label>
+
+
+            {% for entry in microevent.microevententry_set.all %}
+
+            <form method="post" class="row">
+                {% csrf_token %}
+                <input type="hidden" name="microevent_id" value="{{ microevent.id }}">
+                <input type="hidden" name="entry_id" value="{{ entry.id }}">
+                <div class="form-group col-sm" style="width: 40%;">
+                    <input type="text" name="entry_name_{{ entry.id }}" id="id_entry_name_{{ entry.id }}" value="{{ entry.name }}" class="form-control my-1">
+                </div>
+                <div class="form-group col-sm" style="width: 40%;">
+                    <input type="text" name="entry_notice_name_{{ entry.id }}" id="id_entry_notice_name_{{ entry.id }}" value="{{ entry.notice_name }}" class="form-control my-1">
+                </div>
+                <!-- Other fields for this entry here -->
+                <button type="submit" name="action" value="save_entry" class="col-sm-1" style="border: none; background:none; float:right; margin-right: 15px;"><img src="{% static 'save.png' %}" alt="save button" width="30px"></button>
+            </form>
+            {% endfor %}
+    
+                
+            <br><br>
+
+            {% else %}
+            <p>zatím zde <b>nikdo nejede</b></p>
+          
+
+
+
+
+
+
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                {{ microevent_entry_form.as_p }}
+                <div class="row">
+                <input type="hidden" name="microevent_id" value="{{ microevent.id }}">
+                </div>
+                <button type="submit" name="action" value="enter" class="btn btn-primary">Přidat se</button>
+                
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+    
+    
+</div>
+
+
+
+
+
+
+<script>
+    function confirmDelete() {
+        return confirm("Opravdu chceš smazat auto?");
+    }
+</script>
+
+
+        
+        
+
+
+
+
+
+
+
+            </div>
+            <div class="card mt-3 mx-2 mb-2">
+                <div class="card-body row">
+
+                    <h5>Přihlášení závodníci: ({{ num_joined_users }})</h5> 
+
+                    <div class="col themed-grid-col">Jméno</div><div class="col themed-grid-col">Příjmení</div><div class="col themed-grid-col">Index</div><div class="col themed-grid-col">Kategorie</div><div class="col themed-grid-col">Číslo čipu</div>
+	                <div class="container-lg m-1"></div>
+
+                    {% if entries %}
+                    {% for entry in entries %}
+                    <div class="col themed-grid-col">{{entry.first_name}}</div><div class="col themed-grid-col">{{entry.second_name}}</div><div class="col themed-grid-col">{{entry.index}}</div><div class="col themed-grid-col">{{entry.get_category_display}}</div><div class="col themed-grid-col">{{entry.si_number}}</div> 
+                    <div class="container-lg"></div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="container-lg m-1 text-center">Zatím se nikdo nepřihlásil</div>
+                    {% endif %}
+
+
+                </div>
+            </div>
+            <div class="card-footer text-muted">
+                Aktualizováno {{event_detail.date_updated|date:"d.m.Y"}} od {{event_detail.author.first_name}} {{event_detail.author.second_name}} 
+                </div> 
+        
+        </div>
+    </div>
+    <!--konec detail kalendáře-->
+    <div class="col-md-3">
+        {% if request.user|organizator_same_club:event_detail %}
+        <a href="{% url 'kalendar:edit' event_detail.slug %}" class="btn d-block btn-primary">Editovat událost</a><br>
+        {% if request.user|organizator_same_club_only:event_detail and entries %}
+        <a href="{% url 'kalendar:entry_edit_all' event_detail.slug %}" class="btn d-block btn-primary">Editace přihlášených</a><br>
+        <a href="{% url 'kalendar:download_participants_csv' event_detail.slug %}" class="btn d-block btn-primary">Seznam účastníků (CSV)</a><br>
+        <a href="{% url 'kalendar:download_participants_xlsx' event_detail.slug %}" class="btn d-block btn-primary">Seznam účastníků (XLSX)</a><br>
+        {% endif %}
+    {% endif %}         
+
+        <div class="card mb-3">  
+            <div class="card-body">
+                <div class="text-center">
+                    <!--<a href="#" class="btn btn-primary position-absolute top-0 end-0"">Edit</a>-->
+                    {% if message %}
+                        <div class="alert alert-info">
+                            {{ message }}<br>{{event_detail.termin_prihl|date:"d.m.Y H:i"}}
+                            </div>
+                        {% else %}
+                            {% if user_has_entry %}
+                                <a href="{% url 'kalendar:entry_edit' event_detail.slug %}" class="btn d-block btn-primary mb-2">Uprav přihlášku</a>do {{event_detail.termin_prihl|date:"d.m.Y H:i"}}                            
+                            {% else %}
+                            <a href="{% url 'kalendar:entry' event_detail.slug %}" class="btn d-block btn-primary mb-2">Přihlásit se</a>do {{event_detail.termin_prihl|date:"d.m.Y H:i"}}
+                                {% if request.user.is_authenticated %}
+                                {% else %}
+                                <a href="{% if request.user.is_authenticated %}{% url 'kalendar:entry_edit' event_detail.slug %}{% else %}{% url 'login' %}?next={% url 'kalendar:entry_edit' event_detail.slug %}{% endif %}" class="btn d-block btn-primary mb-2 mt-2">Uprav přihlášku</a>do {{event_detail.termin_prihl|date:"d.m.Y H:i"}}                            
+                                {% endif %}
+                            {% endif %}
+                    {% endif %}
+                </div>                
+            </div>
+        </div>
+        {% if event_detail.bulletin or event_detail.pokyny or event_detail.startlist or event_detail.results or event_detail.splittimes or event_detail.mapa %}
+        <div class="card">
+            <div class="card-body">
+                <div class="text-left">
+                    <!--<a href="#" class="btn btn-primary position-absolute top-0 end-0"">Edit</a>-->
+                    <h5>Soubory:</h5>
+                    {% if event_detail.bulletin %}
+                    <a href="{{event_detail.bulletin.url}}" target="_blank">Propozice</a><br>
+                    {% endif %}
+                    {% if event_detail.pokyny %}
+                    <a href="{{event_detail.pokyny.url}}" target="_blank">Pokyny</a><br>
+                    {% endif %}
+                    {% if event_detail.startlist %}
+                    <a href="{{event_detail.startlist.url}}" target="_blank">Startovka</a><br>
+                    {% endif %}
+                    {% if event_detail.results %}
+                    <a href="{{event_detail.results.url}}" target="_blank">Výsledky</a><br>
+                    {% endif %}
+                    {% if event_detail.splittimes %}
+                    <a href="{{event_detail.splittimes.url}}" target="_blank">Mezičasy</a><br>
+                    {% endif %}
+                    {% if event_detail.mapa %}
+                    <a href="{{event_detail.mapa.url}}" target="_blank">Mapa</a><br>
+                    {% endif %} 
+
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+
+
+{% endblock content %}

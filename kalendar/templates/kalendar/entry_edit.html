@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style type="text/css">
+    input{
+        border-style: none;
+        width:100%;
+    }
+    select{
+        border-style: none;
+        width:100%;
+    }
+</style>
+<!--
+<form method="post">
+    {% csrf_token %}
+všechny tagy jednotlivě
+        {{ form.first_name.label_tag }}
+        {{ form.first_name }}
+        {{ form.second_name.label_tag }}
+        {{ form.second_name }}
+        {{ form.si_number.label_tag }}
+        {{ form.si_number }}
+        {{ form.category.label_tag }}
+        {{ form.category }}
+        <br><br>
+        -Pro celý formulář: {{ form.as_p }}-->
+        
+<div class="card mb-3">
+    <div class="card-body">
+        <h4 class="card-title">Editace přihlášky</h4>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row col-lg-12">
+                <div class="col">
+                    <div class="form-label">{{ form.first_name.label_tag }}</div>
+                    <div class="form-control">{{ form.first_name }}</div>
+                </div>
+                <div class="col">
+                    <div class="form-label">{{ form.second_name.label_tag }}</div>
+                    <div class="form-control">{{ form.second_name }}</div>
+                </div>
+                <div class="col">
+                    <div class="form-label">{{ form.category.label_tag }}</div>
+                    <div class="form-control">
+                        <select name="category" id="id_category" required>
+                            {% for category_value in categories %}
+                                <option value="{{ category_value }}" {% if form.initial.category == category_value %}selected{% endif %}>{{ category_value|upper }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                               
+                <div class="col">
+                    <div class="form-label">{{ form.si_number.label_tag }}</div>
+                    <div class="form-control">{{ form.si_number }}</div>
+                </div>
+                <div class="col">
+                    <div class="form-label">{{ form.note.label_tag }}</div>
+                    <div class="form-control">{{ form.note }}</div>
+                </div>
+
+            </div>
+        
+         <!-- Display errors for each form field -->
+         {% for field in form %}
+    <p>
+        {% for error in field.errors %}
+            <p style="color: red;">{{ error }}</p>
+        {% endfor %}
+    </p>
+{% endfor %}
+
+<!-- Display non-field errors -->
+{% if form.non_field_errors %}
+    <div style="color: red;">
+        <p>{{ form.non_field_errors }}</p>
+    </div>
+{% endif %}
+
+<!-- Display success message if available -->
+{% if success_message %}
+    <p style="color: green;">{{ success_message }}</p>
+{% endif %}
+
+
+            <button type="submit" class="submit-button btn btn-lg btn-primary">Uložit přihlášku</button>
+            <a href="{% url 'kalendar:event' event_detail.slug %}" class="btn btn-secondary btn-sm mt-1 mx-2">Zpět na událost</a>
+            <button type="submit" class="btn btn-danger mt-1" style="float:right;" name="delete_entry" onclick="return confirmDelete();">Smazat přihlášku</button>
+
+        </form>
+    </div>
+</div>
+<script>
+    function confirmDelete() {
+        return confirm("Opravdu chceš přihlášku smazat?");
+    }
+</script>
+{% endblock %}

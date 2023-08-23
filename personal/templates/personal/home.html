@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style type="text/css">
+
+@media (max-width: 768px) { 
+		.right-column{
+			margin-left: 0px;
+		}
+	}
+
+	@media (min-width: 768px) { 
+		.right-column{
+			margin-left: 20px;
+		}
+	}
+
+	.create-post-bar{
+		background-color: #fff;
+		margin-top:8px;
+		float:right;
+	}
+
+	.left-column{
+		padding:0px;
+	}
+
+	.right-column{
+		padding:0px;
+	}
+
+	.themed-grid-col {
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+  background-color: rgba(112, 131, 233, 0.15);
+  border: 1px solid rgba(44, 47, 249, 0.3);
+	}
+	.col-4 {
+		width:20%!important;
+	}
+	.mcr-nz {
+		background-color: rgba(252, 17, 17, 0.226)!important;
+	}
+
+</style>
+<div class="container-lg">
+{% if success_message_delete %}
+	<div class="alert alert-success">{{success_message_delete}}</div>
+{% endif %}
+			
+<div class="create-post-bar">
+		<b>Odkazy:</b> 
+		{% if request.user.is_organizator %}
+		<a href="{% url 'kalendar:create' %}">Vytvoř soutěž</a>, uživatelé
+		{% else %}
+		Vytvářet událost může jen organizátor, ty ne
+		{% endif %}
+</div>
+
+<h3>Kalendář soutěží:</h3>
+
+<div class="row mb-3 text-center" style="clear: both;">
+	<div class="col col-md-2 themed-grid-col">Datum</div>
+	<div class="col col-md-6 themed-grid-col">Název soutěže</div>
+	<div class="col col-md-1 themed-grid-col">Pořadatel</div>
+	<div class="col col-md-3 themed-grid-col">Odkazy</div>
+	<div class="container-lg m-1"></div>
+	{% if events %}
+	{% for event in events %}
+	<div class="col col-md-2 themed-grid-col {% if event.event_type == 'mcr-nz' %}mcr-nz{% endif %}">{{event.event_date|date:"d.m.Y"}}</div>
+	<div class="col col-md-6 themed-grid-col {% if event.event_type == 'mcr-nz' %}mcr-nz{% endif %}" style="text-align:left"><a href="{% url 'kalendar:event' event.slug %}">{{event.title}}</a></div>
+	<div class="col col-md-1 themed-grid-col {% if event.event_type == 'mcr-nz' %}mcr-nz{% endif %}">{{event.club}}</div>
+	<div class="col col-md-3 themed-grid-col {% if event.event_type == 'mcr-nz' %}mcr-nz{% endif %}">
+		{% if event.results %}
+		<a href="{{ event.results.url }}" target="_blank">Výsledky</a>
+		{% else %}
+		{% if event.startlist %}
+    	<a href="{{ event.startlist.url }}" target="_blank">Startovka</a>,
+    	{% endif %}
+		{% if event.pokyny %}
+		<a href="{{ event.pokyny.url }}" target="_blank">Pokyny</a>
+		{% else %}
+		{% if event.bulletin %}
+    	<a href="{{ event.bulletin.url }}" target="_blank">Propozice</a>
+		{% endif %}
+    	{% endif %}
+		{% endif %}		
+		
+	</div>
+	<div class="container-lg"></div>
+
+	{% endfor %}
+	{% else %}
+	<div class="container-lg m-1">Nejsou zde žádné akce k zobrazení</div>
+	{% endif %}
+</div>
+	<br><br>
+
+<h3>Registrovaní uživatelé:</h3>
+	<div class="row mb-3 text-center">
+	<div class="col-4 themed-grid-col">Jméno</div><div class="col-4 themed-grid-col">Příjmení</div><div class="col-4 themed-grid-col">Index</div><div class="col-4 themed-grid-col">Uživ. jméno</div><div class="col-4 themed-grid-col">Číslo čipu</div>
+	<div class="container-lg m-1"></div>
+
+	
+{% for account in accounts %}
+    <div class="col-4 themed-grid-col">{{account.first_name}}</div><div class="col-4 themed-grid-col">{{account.second_name}}</div><div class="col-4 themed-grid-col">{{account.index}}</div><div class="col-4 themed-grid-col">{{account.username}}</div><div class="col-4 themed-grid-col">{{account.si_number}}</div>
+{% endfor %}
+
+
+</div>
+</div>
+
+
+
+{% endblock content %}

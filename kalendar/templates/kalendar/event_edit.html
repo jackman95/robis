@@ -1,0 +1,312 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<style type="text/css">
+   .create-form {
+	    width: 100%;
+	    max-width: 100%;
+	    padding: 15px;
+	    margin: auto;
+  	}
+
+  	.submit-button{
+  		max-width: 200px;
+  	}
+
+	.image {
+	  opacity: 1;
+	  transition: .5s ease;
+	  backface-visibility: hidden;
+	}
+
+	.middle {
+	  transition: .5s ease;
+	  opacity: 0;
+	  position: absolute;
+	  text-align: center;
+	  top: 50%;
+	  left: 50%;
+	  transform: translate(-50%, -50%);
+	
+	}
+	.image-group{
+		position: relative;
+  		text-align: center;
+  		cursor:pointer;
+	}
+
+	.image-group:hover .image {
+	  opacity: 0.3;
+	}
+
+	.image-group:hover .middle {
+	  opacity: 1;
+	}
+
+	.text {
+	  margin: auto;
+	  background-color: #4CAF50;
+	  color: white;
+	  font-size: 15px;
+	  padding: 15px;
+	}
+
+	.form-control {
+		appearance: auto!important;
+	}
+
+	textarea {
+  		width: 100%;
+  		height: 100px;
+	}
+
+	.ram{
+		border: 2px solid #3a67e2;
+        background-color: #f6f8ff;
+		border-radius: 6px;
+		padding: 7px;
+	}
+	p{
+		margin:5px 0 5px 0;
+	}
+	label{
+		font-weight: bold;
+		margin-bottom:7px;
+	}
+	input .form-check-input{
+		padding:200px;
+		display: block;
+	}
+	.form-group{
+		margin-bottom: 10px;
+	}
+</style>
+
+	
+		
+<!--Success message pro stránku event_edit 
+{% if success_message_update %}
+<div class="alert alert-success">{{success_message_update}}</div>
+{% endif %}-->
+
+<form class="create-form row" method="post" enctype="multipart/form-data">{% csrf_token %}
+	<div class="col-lg-6 offset-lg-1 m-auto">
+	<!-- title -->
+	<div class="form-group">
+		<label for="id_title">Title</label>
+		<input class="form-control form-control-lg" type="text" name="title" id="id_title" placeholder="Title" value="{{form.initial.title}}" required autofocus>
+	</div>
+
+	<!-- Druh akce -->
+
+	<div class="form-group">
+		<label for="id_event_type">Druh akce</label>
+		<select class="form-control form-control-lg" style="padding-bottom: 8px;" name="event_type" id="id_event_type" required autofocus>
+			<option value="trenink" {% if form.initial.event_type == "trenink" %}selected{% endif %}>Trénink</option>
+			<option value="tc-oddil" {% if form.initial.event_type == "tc-oddil" %}selected{% endif %}>Oddílové soustředění</option>
+			<option value="3st" {% if form.initial.event_type == "3st" %}selected{% endif %}>Soutěž III. stupně</option>
+			<option value="2st" {% if form.initial.event_type == "2st" %}selected{% endif %}>Soutěž II. stupně</option>
+			<option value="ostatni" {% if form.initial.event_type == "ostatni" %}selected{% endif %}>Ostatní</option>
+			{% if request.user.is_admin or request.user.is_sekretar %}
+			<option value="mcr-nz" {% if form.initial.event_type == "mcr-nz" %}selected{% endif %}>MČR/NŽ - I. stupeň</option>
+			<option value="repre" {% if form.initial.event_type == "repre" %}selected{% endif %}>Reprezentační</option>
+			<option value="zdr" {% if form.initial.event_type == "zdr" %}selected{% endif %}>ŽDR</option>
+			{% endif %}
+		</select>
+	</div>
+
+
+	<!-- Datum akce -->
+	<div class="form-group">
+		<label for="id_event_date">Datum</label>
+		<input class="form-control form-control-lg" type="date" name="event_date" id="id_event_date" placeholder="event_date" value="{{form.initial.event_date|date:'Y-m-d'}}" required>
+	</div>
+
+	<!-- Termín přihlášek -->
+	<div class="form-group">
+		<label for="id_termin_prihl">Termín přihlášek</label>
+		<input class="form-control form-control-lg" type="datetime-local" name="termin_prihl" id="id_termin_prihl" placeholder="termín_přihlášek" value="{{form.initial.termin_prihl|date:'Y-m-d'}}T{{form.initial.termin_prihl|time:'H:i'}}" required>
+	</div>
+
+	<!-- Start 00 -->
+	<div class="form-group">
+		<label for="id_start00">Start 00</label>
+		<input class="form-control" type="datetime-local" name="start00" id="id_start00" placeholder="start00" value="{{form.initial.start00|date:'Y-m-d'}}T{{form.initial.start00|time:'H:i'}}">
+	</div>
+
+	<!-- Disciplína -->
+	<div class="form-group">
+		<label for="id_discipline">Disciplína</label>
+		<input class="form-control" type="text" name="discipline" id="id_discipline" value="{{form.initial.discipline}}">
+	</div>
+
+	<!-- GPS souřadnice schromaždiště -->
+	<div class="form-group">
+		<label for="id_gps">GPS souřadnice shromaždiště</label>
+		<input class="form-control" type="text" name="gps" id="id_gps" value="{{form.initial.gps}}">
+	</div>
+
+	<!-- Kontakt -->
+	<div class="form-group">
+		<label for="id_contact">Kontakt na organizátora</label>
+		<input class="form-control" type="text" name="contact" id="id_contact" value="{{form.initial.contact}}">
+	</div>
+	
+	
+
+	<!-- Zpráva upozorňující -->
+	<div class="form-group">
+		<label for="id_zprava_warning">Zpráva upozorňující</label>
+		<textarea class="form-control" rows="10" type="text" name="zprava_warning" defaut='' id="id_zprava_warning" placeholder="Zpráva se zobrazí v horní části, jako důležitá poznámka, např. v případě změny startu, zrušení závodu/tréninku apod.">{{form.initial.zprava_warning|safe}}</textarea>
+	</div>
+
+
+	<!-- Zpráva informační -->
+	<div class="form-group">
+		<label for="id_zprava_info">Zpráva informační</label>
+		<textarea class="form-control" rows="10" type="text" name="zprava_info" defaut='' id="id_zprava_info" placeholder="Zpráva se zobrazí v horní části, jako poznámka, např. v případě změny startovek, informace o dopravě na start apod.">{{form.initial.zprava_info|safe}}</textarea>
+	</div>
+
+
+	</div>
+	<div class="col-lg-5 offset-lg-1 m-auto">
+		<!-- Propozice -->
+	<div class="form-group ram">
+		<label for="id_bulletin">Nahrát propozice v .pdf</label>
+		<input class="form-control" type="file" name="bulletin" id="id_bulletin" accept="application/pdf" lang="cs">
+		<p>
+			{% if form.initial.bulletin %}
+				Stávající soubor: <a href="{{ form.initial.bulletin.url }}" target="_blank">{{ form.initial.bulletin.name }}</a><br>
+				<label class="form-check-label" for="id_delete_bulletin">Smazat propozice</label>
+				<input class="form-check-input" type="checkbox" name="delete_bulletin" id="id_delete_bulletin">
+			{% else %}
+				Stávající soubor: žádný soubor
+			{% endif %}
+		</p>
+	</div>
+
+	<!-- Pokyny -->
+	<div class="form-group ram">
+		<label for="id_pokyny">Nahrát pokyny v .pdf</label>
+		<input class="form-control" type="file" name="pokyny" id="id_pokyny" accept="application/pdf" lang="cs">
+		<p>
+			{% if form.initial.pokyny %}
+				Stávající soubor: <a href="{{ form.initial.pokyny.url }}" target="_blank">{{ form.initial.pokyny.name }}</a><br>
+				<label class="form-check-label" for="id_delete_pokyny">Smazat pokyny</label>
+				<input class="form-check-input" type="checkbox" name="delete_pokyny" id="id_delete_pokyny">
+			{% else %}
+				Stávající soubor: žádný soubor
+			{% endif %}
+		</p>
+	</div>
+
+	<!-- Startovka -->
+	<div class="form-group ram">
+		<label for="id_startlist">Nahrát startovku</label>
+		<input class="form-control" type="file" name="startlist" id="id_startlist" accept="/*" lang="cs">
+		<p>
+			{% if form.initial.startlist %}
+				Stávající soubor: <a href="{{ form.initial.startlist.url }}" target="_blank">{{ form.initial.startlist.name }}</a><br>
+				<label class="form-check-label" for="id_delete_startlist">Smazat startovku</label>
+				<input class="form-check-input" type="checkbox" name="delete_startlist" id="id_delete_startlist">
+			{% else %}
+				Stávající soubor: žádný soubor
+			{% endif %}
+		</p>
+	</div>
+
+	<!-- Výsledky -->
+	<div class="form-group ram">
+		<label for="id_results">Nahrát výsledky</label>
+		<input class="form-control" type="file" name="results" id="id_results" accept="/*" lang="cs">
+		<p>
+			{% if form.initial.results %}
+				Stávající soubor: <a href="{{ form.initial.results.url }}" target="_blank">{{ form.initial.results.name }}</a><br>
+				<label class="form-check-label" for="id_delete_results">Smazat výsledky</label>
+				<input class="form-check-input" type="checkbox" name="delete_results" id="id_delete_results">
+			{% else %}
+				Stávající soubor: žádný soubor
+			{% endif %}
+		</p>
+	</div>
+
+	<!-- Startovka -->
+	<div class="form-group ram">
+		<label for="id_splittimes">Nahrát mezičasy</label>
+		<input class="form-control" type="file" name="splittimes" id="id_splittimes" accept="/*" lang="cs">
+		<p>
+			{% if form.initial.splittimes %}
+				Stávající soubor: <a href="{{ form.initial.splittimes.url }}" target="_blank">{{ form.initial.splittimes.name }}</a><br>
+				<label class="form-check-label" for="id_delete_splittimes">Smazat mezičasy</label>
+				<input class="form-check-input" type="checkbox" name="delete_splittimes" id="id_delete_splittimes">
+			{% else %}
+				Stávající soubor: žádný soubor
+			{% endif %}
+		</p>
+	</div>
+
+	<!-- Mapa -->
+	<div class="form-group ram">
+		<label for="id_mapa">Nahrát mapu</label>
+		<input class="form-control" type="file" name="mapa" id="id_mapa" accept="image/*" lang="cs">
+		<p>
+			{% if form.initial.mapa %}
+				Stávající soubor: <a href="{{ form.initial.mapa.url }}" target="_blank">{{ form.initial.mapa.name }}</a><br>
+				<label class="form-check-label" for="id_delete_mapa">Smazat mapu</label>
+				<input class="form-check-input" type="checkbox" name="delete_mapa" id="id_delete_mapa">
+			{% else %}
+				Stávající soubor: žádný soubor
+			{% endif %}
+		</p>
+	</div>
+
+	</div>
+	<div class="col-lg-10 m-auto">
+
+		<!-- Submit btn -->
+		<button class="submit-button btn btn-lg btn-primary btn-block" type="submit">Uložit změny</button>
+		<a href="{% url 'kalendar:event' event_detail.slug %}" class="btn btn-secondary btn-sm mt-1 mx-2">Zpět na událost</a>
+		<button class="btn btn-danger mt-1" style="float:right;" id="deleteEventButton" type="submit" name="event_delete">Smazat událost</button>
+
+	</div>
+
+	{% for field in form %}
+		<p>
+			{% for error in field.errors %}
+				<p style="color: red">{{ error }}</p>
+			{% endfor %}
+		</p>
+	{% endfor %}
+	{% if form.non_field_errors %}
+		<div style="color: red">
+			<p>{{form.non_field_errors}}</p>
+		</div>
+	{% endif %}
+
+
+</form>	
+			
+			
+
+			
+		
+	
+	<script>
+		document.getElementById('deleteEventButton').addEventListener('click', function(event) {
+			event.preventDefault();
+			if (confirm("Opravtu chceš smazat tuto událost? Tento krok nezlze vzít zpět!")) {
+				// Set a hidden input value to identify the delete action
+				var deleteInput = document.createElement('input');
+				deleteInput.type = 'hidden';
+				deleteInput.name = 'event_delete';
+				deleteInput.value = 'true';
+				this.form.appendChild(deleteInput);
+	
+				// Submit the form after confirmation
+				this.form.submit();
+			}
+		});
+	</script>	
+	
+{% endblock content %}

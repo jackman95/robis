@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style type="text/css">
+    .form-control {
+		appearance: auto!important;
+	}
+</style>
+<!-- Entry Form -->
+
+{% if message %}
+        <div class="alert alert-info">
+            {{ message }} {{event_detail.termin_prihl|date:"d.m.Y H:i"}}.<br>
+            Pro přihlášení můžete zkusit kontaktovat někoho z organizátorů
+        </div>
+{% else %}
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">Přihláška na událost</h5>
+        <form method="post" action="{% url 'kalendar:entry' event_detail.slug %}">
+            {% csrf_token %}
+            <div class="row col-lg-12">
+                <div class="col">
+                    <label for="first_name" class="form-label">Jméno</label>
+                    <input type="text" class="form-control" value="{{form.initial.first_name}}" id="id_first_name" name="first_name" required>
+                </div>
+                <div class="col">
+                    <label for="second_name" class="form-label">Příjmení</label>
+                    <input type="text" class="form-control" value="{{form.initial.second_name}}" id="id_second_name" name="second_name" required>
+                </div>
+                <div class="col">
+                    <label for="index" class="form-label">Index</label>
+                    <input type="text" class="form-control" placeholder="GBM0000" value="{{form.initial.index}}" id="id_index" name="index" required>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="id_category">Kategorie</label>
+                        <select class="form-control mt-2" name="category" id="id_category" required>
+                            {% if sex == 'F' %}
+                                {% if age <= 12 %}
+                                    <option value="mdr">MDR</option>
+                                    <option value="d12">D12</option>
+                                    <option value="d14">D14</option>
+                                    <option value="d16">D16</option>
+                                    <option value="d19">D19</option>
+                                    <option value="d20">D20</option>
+                                {% elif age <= 14 %}
+                                    <option value="d14">D14</option>
+                                    <option value="d16">D16</option>
+                                    <option value="d19">D19</option>
+                                    <option value="d20">D20</option>
+                                {% elif age <= 16 %}
+                                    <option value="d16">D16</option>
+                                    <option value="d19">D19</option>
+                                    <option value="d20">D20</option>
+                                {% elif age <= 19 %}
+                                    <option value="d19">D19</option>
+                                    <option value="d20">D20</option>
+                                {% elif age <= 34 %}
+                                    <option value="d20">D20</option>
+                                {% elif age <= 44 %}
+                                    <option value="d35">D35</option>
+                                    <option value="d20">D20</option>
+                                {% elif age <= 54 %}
+                                    <option value="d45">D45</option>
+                                    <option value="d35">D35</option>
+                                    <option value="d20">D20</option>
+                                {% elif age <= 64 %}
+                                    <option value="d55">D55</option>
+                                    <option value="d45">D45</option>
+                                    <option value="d35">D35</option>
+                                    <option value="d20">D20</option>
+                                {% else %}
+                                    <option value="d65">D65</option>
+                                    <option value="d55">D55</option>
+                                    <option value="d45">D45</option>
+                                    <option value="d35">D35</option>
+                                    <option value="d20">D20</option>
+                                {% endif %}
+                            {% else %}
+                                {% if age <= 12 %}
+                                    <option value="mdr">MDR</option>
+                                    <option value="m12">M12</option>
+                                    <option value="m14">M14</option>
+                                    <option value="m16">M16</option>
+                                    <option value="m19">M19</option>
+                                    <option value="m20">M20</option>
+                                {% elif age <= 14 %}
+                                    <option value="m14">M14</option>
+                                    <option value="m16">M16</option>
+                                    <option value="m19">M19</option>
+                                    <option value="m20">M20</option>
+                                {% elif age <= 16 %}
+                                    <option value="m16">M16</option>
+                                    <option value="m19">M19</option>
+                                    <option value="m20">M20</option>
+                                {% elif age <= 19 %}
+                                    <option value="m19">M19</option>
+                                    <option value="m20">M20</option>
+                                {% elif age <= 39 %}
+                                    <option value="m20">M20</option>
+                                {% elif age <= 49 %}
+                                    <option value="m40">M40</option>
+                                    <option value="m20">M20</option>
+                                {% elif age <= 59 %}
+                                    <option value="m50">M50</option>
+                                    <option value="m40">M40</option>
+                                    <option value="m20">M20</option>
+                                {% elif age <= 69 %}
+                                    <option value="m60">M60</option>
+                                    <option value="m50">M50</option>
+                                    <option value="m40">M40</option>
+                                    <option value="m20">M20</option>
+                                {% elif age <= 99 %}
+                                    <option value="m70">M70</option>
+                                    <option value="m60">M60</option>
+                                    <option value="m50">M50</option> 
+                                    <option value="m40">M40</option>
+                                    <option value="m20">M20</option>
+                                {% else %}
+                                    <option value="mdr">MDR</option>
+                                    <option value="d12">D12</option>
+                                    <option value="d14">D14</option>
+                                    <option value="d16">D16</option>
+                                    <option value="d19">D19</option>
+                                    <option value="d20">D20</option>
+                                    <option value="d35">D35</option>
+                                    <option value="d45">D45</option>
+                                    <option value="d55">D55</option>
+                                    <option value="d65">D65</option>
+                                    <option value="m12">M12</option>
+                                    <option value="m14">M14</option>
+                                    <option value="m16">M16</option>
+                                    <option value="m19">M19</option>
+                                    <option value="m20" selected>M20</option>
+                                    <option value="m40">M40</option>
+                                    <option value="m50">M50</option>
+                                    <option value="m60">M60</option>
+                                    <option value="m70">M70</option>
+                                {% endif %}
+                            {% endif %}
+                        </select>
+                    </div>
+                </div>
+                
+                
+                <div class="col">
+                    <label for="si_number" class="form-label">Číslo čipu</label>
+                    <input type="text" class="form-control" placeholder="0000" value="{{form.initial.si_number}}" id="id_si_number" name="si_number" required>
+                </div>
+
+                <div class="col">
+                    <label for="note" class="form-label">Poznámka pro pořadatele</label>
+                    <input type="text" class="form-control" placeholder="Např. prosím první start" value="{{form.initial.note}}" id="id_note" name="note">
+                </div>
+
+            </div>
+        
+         <!-- Display errors for each form field -->
+         {% for field in form %}
+    <p>
+        {% for error in field.errors %}
+            <p style="color: red;">{{ error }}</p>
+        {% endfor %}
+    </p>
+{% endfor %}
+
+<!-- Display non-field errors -->
+{% if form.non_field_errors %}
+    <div style="color: red;">
+        <p>{{ form.non_field_errors }}</p>
+    </div>
+{% endif %}
+
+<!-- Display success message if available -->
+{% if success_message %}
+    <p style="color: green;">{{ success_message }}</p>
+{% endif %}
+
+
+            <button type="submit" class="btn btn-primary px-5 py-2">Přihlásit se</button>
+            <a href="{% url 'kalendar:event' event_detail.slug %}" style="float:right" class="btn btn-secondary">Zpět na událost</a>
+
+        </form>
+    </div>
+</div>
+{% endif %}
+    
+
+{% endblock content %}

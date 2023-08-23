@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<style type="text/css">
+	.form-signin {
+	  max-width: 330px;
+	  padding: 1rem;
+	}
+	
+	.form-signin .form-floating:focus-within {
+	  z-index: 2;
+	}
+    
+    .form-signin input {
+      margin-bottom: 10px;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+
+    .form-signin input[name="index"] {
+      margin-bottom: 20px;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+	
+	.form-signin input[name="password1"] {
+      margin-bottom: 0px;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+	.h3{
+		text-align:center;
+	} 
+
+	</style>
+	
+	<main class="form-signin w-100 m-auto">
+		<form method="post"> {% csrf_token %}
+		  <h1 class="h3 mb-3 fw-normal">Registrace</h1>
+	  
+		  <div class="form-floating">
+            <input type="text" name="username" class="form-control" id="inputUsername" placeholder="novak">
+            <label for="floatingInput">Uživatelské jméno</label>
+          </div>
+		  <div class="form-floating">
+            <input type="email" name="email" class="form-control" id="inputEmail" placeholder="jmeno@skradiosport.cz">
+            <label for="floatingInput">Email</label>
+          </div>
+		  <div class="form-floating mb-2">
+			<input type="password" name="password1" class="form-control" id="inputPassword1" placeholder="Heslo123">
+			<label for="floatingPassword">Heslo</label>
+			<small class="form-text text-muted">Heslo musí obshovat 8 znaků, písmena + čísla</small>
+		  </div>
+		  <div class="form-floating">
+			<input type="password" name="password2" class="form-control" id="inputPassword2" placeholder="Zopakovat heslo">
+			<label for="floatingPassword">Zopakovat heslo</label>
+		  </div>
+          <div class="form-floating">
+            <input type="text" name="first_name" class="form-control" id="inputFirst_name" placeholder="Jan">
+            <label for="floatingInput">Křestní jméno</label>
+          </div>
+          <div class="form-floating">
+            <input type="text" name="second_name" class="form-control" id="inputSecond_name" placeholder="Novák">
+            <label for="floatingInput">Příjmení</label>
+          </div>
+          <div class="form-floating">
+            <input type="text" name="index" class="form-control" id="inputIndex" placeholder="GBM5512">
+            <label for="floatingInput">Index</label>
+          </div>
+		  <div class="form-floating">
+            <input type="text" name="si_number" class="form-control" id="inputsi_number" placeholder="2042535">
+            <label for="floatingInput">Číslo čipu</label>
+          </div>
+	
+		  {% for field in registration_form %}
+		  <p>
+			  {% for error in field.errors %}
+			  <p style="color: red;">{{error}}</p>
+			  {% endfor %}
+		  </p>
+		  {% endfor %}
+	  
+		  {% if registration_form.non_field_errors %}
+		  <div style="color:red;">
+			  <p>{{registration_form.non_field_errors}}</p>
+		  </div>
+		  {% endif %}
+	
+		  <button class="btn btn-primary w-100 py-2" type="submit">Zaregistrovat se</button>
+		</form>
+	  </main>
+	  
+{% endblock content %}

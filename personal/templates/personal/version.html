@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style type="text/css">
+    h4 {
+        color:red;
+    }
+</style>
+<div class="container-lg mb-4">
+<h3>Verze ROBisu a informace o nich</h3>
+<br>
+
+<h5>Chystáme:</h5>
+<li>Vytváření víceetapových soutěží a možnost editace obsahu přihlášek</li>
+<li>Oddílová sekce</li>
+<li>Finanční bilance účtu na základě přihlášek na soutěže a automodulů</li>
+<li>Tvorba startovek</li>
+<h5>Známé chyby:</h5>
+<li>V editaci účtu jde přes vývojářské nástroje změnit index vymazáním atributu readonly v inputu. Index musí moci měnit pouze manažer.</li>
+<li>Při manipulaci s účtem (přihlášení, registrace atd.) vyskakují error hlášky v angličtině, nezobrazují se správně u polí a při registraci chybí návod, jak správně vyplnit heslo ještě před prvním odesláním formuláře.</li>
+<li>Uživatelské role (oprávnění) nejsou kompletní a je potřeba jejich finalizace.</li>
+
+<br>
+<h4>230101-230822</h4>
+<h5>Novinky:</h5>
+<li>Closed Alpha verze robisu</li>
+<li>Uživatelské prostředí</li>
+<li>Vytvoření a editace soutěží (pouze jednoetapové)</li>
+<li>V každé soutěži se nachází (základní) automodul pro plánování dopravy</li>
+<li>Přihlašování na soutěže</li>
+<li>Kalendář soutěží na hlavní stránce</li>
+<li>Seznam soutěží, na které je uživatel přihlášen</li>
+<li>Vytvořena stránka s nápovědou</li>
+
+</div>
+{% endblock content %}
+

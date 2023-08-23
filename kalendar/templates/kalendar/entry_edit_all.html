@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style type="text/css">
+    input {
+        border-style: none;
+    }
+
+    select {
+        border-style: none;
+        width: 100%;
+    }
+
+    .col {
+        margin: 5px 0 5px 0;
+    }
+</style>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h4 class="card-title">Editace přihlášených</h4>
+        <form method="post" action="{% url 'kalendar:entry_edit_all' event_detail.slug %}">
+            {% csrf_token %}
+            <div class="row mb-3">
+                <div class="col form-label">Jméno</div>
+                <div class="col form-label">Příjmení</div>
+                <div class="col form-label">Index</div>
+                <div class="col-1 form-label">Kategorie</div>
+                <div class="col form-label">Číslo čipu {{ form.si_number.label_tag }}</div>
+                <div class="col form-label">Poznámka {{ form.note.label_tag }}</div>
+                <div class="col-1 text-center form-label">Smazat</div>
+                <div class="container-lg m-1"></div>
+
+                {% for form in entry_forms %}
+                <div class="col-2">
+                    <div class="form-control">{{ form.first_name }}</div>
+                    {% for error in form.first_name.errors %}
+                            <p style="color: red;">{{ error }}</p>
+                        {% endfor %}
+                </div>
+                <div class="col-2">
+                    <div class="form-control">{{ form.second_name }}</div>
+                    {% for error in form.second_name.errors %}
+                            <p style="color: red;">{{ error }}</p>
+                        {% endfor %}
+                </div>
+                <div class="col-2">
+                    <div class="form-control">{{ form.index }}</div>
+                    {% for error in form.index.errors %}
+                            <p style="color: red;">{{ error }}</p>
+                        {% endfor %}
+                </div>
+                <div class="col-1">
+                    <div class="form-control">{{ form.category }}</div>
+                    {% for error in form.category.errors %}
+                            <p style="color: red;">{{ error }}</p>
+                        {% endfor %}
+                </div>
+                <div class="col-2">
+                    <div class="form-control">{{ form.si_number }}</div>
+                    {% for error in form.si_number.errors %}
+                            <p style="color: red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div class="col-2">
+                    <div class="form-control">{{ form.note }}</div>
+                    {% for error in form.note.errors %}
+                            <p style="color: red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div class="col-1 text-center">
+                    <input type="checkbox" class="mt-3" name="delete_checkbox_{{ form.instance.id }}" value="true">
+                </div>
+                <div class="container-lg mt-2"></div>
+                {% endfor %}
+            </div>
+
+            <!-- Display errors for each form field 
+            {% for form in entry_forms %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <p style="color: red;">{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+            {% endfor %}-->
+
+            <!-- Display non-field errors -->
+            {% if form.non_field_errors %}
+                <div style="color: red;">
+                    <p>{{ form.non_field_errors }}</p>
+                </div>
+            {% endif %}
+
+            <!-- Display success message if available -->
+            {% if success_message %}
+                <p style="color: green;">{{ success_message }}</p>
+            {% endif %}
+
+            <button type="submit" class="submit-button btn btn-lg btn-primary" name="edit_entries">Uložit přihlášky</button>
+            <button type="submit" class="submit-button btn btn-danger" style="float:right" name="delete_entries" onclick="return confirmDelete();">Smazat označené</button>
+            <a href="{% url 'kalendar:event' event_detail.slug %}" class="btn btn-secondary btn-sm mt-1 mx-3">Zpět na událost</a>
+
+        </form>
+
+
+        <!-- Form for adding a new entry -->
+        <form method="post" class="mt-5" action="{% url 'kalendar:entry_edit_all' event_detail.slug %}">
+            {% csrf_token %}
+            <div class="row mb-3">                
+                <div class="col form-label">Jméno</div>
+                <div class="col form-label">Příjmení {{ form.second_name.label_tag }}</div>
+                <div class="col form-label">Index {{ form.index.label_tag }}</div>
+                <div class="col form-label">Kategorie {{ form.category.label_tag }}</div>
+                <div class="col form-label">Číslo čipu {{ form.si_number.label_tag }}</div>
+                <div class="col form-label">Poznámka {{ form.note.label_tag }}</div>
+                <div class="container-lg m-1"></div>
+            
+                <div class="col-2">
+                    <div class="form-control">{{ new_entry_form.first_name }}</div>    
+                </div>
+                <div class="col-2">
+                    <div class="form-control">{{ new_entry_form.second_name }}</div>
+                </div>
+                <div class="col-2">
+                    <div class="form-control">{{ new_entry_form.index }}</div>
+                    {% for error in new_entry_form.index.errors %}
+                    <p class="text-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div class="col-2">
+                    <div class="form-control">{{ new_entry_form.category }}</div>
+                </div>
+                <div class="col-2">
+                    <div class="form-control">{{ new_entry_form.si_number }}</div>
+                    {% for error in new_entry_form.si_number.errors %}
+                    <p class="text-danger">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div class="col-2">
+                    <div class="form-control">{{ new_entry_form.note }}</div>
+                </div>
+
+                
+            </div>
+            <button type="submit" class="submit-button btn btn-primary">Přihlásit nového účastníka</button>
+            <input type="hidden" name="add_new_entry" value="true">
+        </form>
+
+
+    </div>
+</div>
+
+<script>
+    function confirmDelete() {
+        return confirm("Opravdu chceš smazat označené přihlášky?");
+    }
+    </script>
+
+{% endblock %}

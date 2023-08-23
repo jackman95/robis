@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<style type="text/css">
+  .create-form {
+	    width: 100%;
+	    max-width: 100%;
+	    padding: 15px;
+	    margin: auto;
+  	}
+
+  	.submit-button{
+  		max-width: 200px;
+		margin:10px 0 10px 0;
+  	}
+
+	label {
+  		padding:10px 0 10px 0;
+		font-weight: bold;
+  	}
+	.form-control {
+		appearance: auto!important;
+	}
+</style>
+	<div class="row">
+		<div class="col-lg-7 offset-lg-1 m-auto">
+			<form class="create-form" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+				<!-- title -->
+				<div class="form-group">
+					<label for="id_title">Název akce</label>
+					<input class="form-control" type="text" name="title" id="id_title" placeholder="Např. MČR na klasických tratích" required autofocus>
+				</div>
+
+				<!-- Druh akce -->
+				<div class="form-group">
+					<label for="id_event_type">Druh akce</label>
+					<select class="form-control" style="padding-bottom: 8px;" name="event_type" id="id_event_type" required>
+						<option value="" selected disabled></option>
+						<option value="trenink">Trénink</option>
+						<option value="tc-oddil">Oddílové soustředění</option>
+						<option value="3st">Soutěž III. stupně</option>
+						<option value="2st">Soutěž II. stupně</option>
+						<option value="ostatni">Ostatní</option>
+						{% if request.user.is_admin or request.user.is_sekretar %}
+						<option value="mcr-nz">MČR/NŽ - I. stupeň</option>
+						<option value="repre">Reprezentační</option>
+						<option value="zdr">ŽDR</option>
+						{% endif %}
+					</select>
+				</div>
+
+				<!-- Datum akce -->
+				<div class="form-group">
+					<label for="id_event_date">Datum akce</label>
+					<input class="form-control" type="date" name="event_date" id="id_event_date" placeholder="" required>
+				</div>
+
+				<!-- Termín přihlášek -->
+				<div class="form-group">
+					<label for="id_termin_prihl">Termín přihlášek</label>
+					<input class="form-control" type="datetime-local" name="termin_prihl" id="id_termin_prihl" placeholder="" required>
+				</div>
+
+				<!-- Propozice -->
+				<div class="custom-file">
+					<label for="id_bulletin" class="custom-file-label">Nahrát propozice v .pdf </label>
+					<input  class="form-control" type="file" name="bulletin" id="id_bulletin" accept="application/pdf" lang="cs">
+				</div>
+
+				<!-- Submit btn -->
+				<button class="submit-button btn btn-primary w-100 py-2" type="submit">Vytvořit událost</button>
+				<a href="{% url 'home' %}" style="float:right;" class="btn submit-button btn-secondary">Zpět na kalendář</a>
+
+			</form>	
+		</div>
+	</div>
+
+
+{% endblock content %}

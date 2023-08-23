@@ -1,0 +1,105 @@
+{% load static %}
+<link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+<style type="text/css">
+@media (min-width: 768px) {
+    .mb-md-0 {
+        width:auto!important;
+        } 
+      } 
+    
+    .form-control-dark {
+        border-color: var(--bs-gray);
+    }
+
+    .form-control-dark:focus {
+        border-color: #fff;
+        box-shadow: 0 0 0 .25rem rgba(255, 255, 255, .25);
+    }
+
+    .text-small {
+        font-size: 85%;
+        inset: 0px 0px auto 0px!important; /**místo posledního 0px je možné dát auto a menu se neroztáhne na šířku celého jména**/
+    }
+
+    .dropdown-menu {
+        transition: 100ms;
+    }
+
+    .dropdown-toggle:not(:focus) {
+        outline: 0;
+    }
+
+</style>
+</head>
+<body class="d-flex flex-column h-100">
+  {% if request.user.is_authenticated %} 
+  <div class="container">
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+        <div class="col-md-3 mb-2 mb-md-0">
+          <a href="{% url 'home' %}" target="_self"><img src="{% static 'logo.png' %}" alt="logo ROBISU" height="40px"></a>
+        </div>
+      <ul class="nav nav-pills">
+        <li class="nav-item"><a href="{% url 'home' %}" class="nav-link {% if request.path == '/' %}active{% endif %}">Kalendář závodů</a></li>
+        <!--<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Žebříčky</a>
+          <ul class="dropdown-menu shadow">
+            <li><a class="dropdown-item" href="#">Národní žebříček</a></li>
+            <li><a class="dropdown-item" href="#">Nominační žebříčky</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Archiv</a></li>
+          </ul>
+        </li>--><!--
+        <li class="nav-item"><a href="#" class="nav-link {% if request.path == '#vlož adresu odkazu' %}active{% endif %}">Oddíly</a></li>-->
+        <li class="nav-item"><a href="{% url 'napoveda' %}" class="nav-link {% if request.path == '/napoveda/' %}active{% endif %}">Nápověda</a></li>
+      </ul>
+
+        <div class="d-flex align-items-center">
+        <div class="flex-shrink-0 dropdown">
+          <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            {{request.user.first_name}} {{request.user.second_name}} ({{request.user.index}})
+          </a>
+          <ul class="dropdown-menu text-small shadow">
+            <li><a class="dropdown-item" href="{% url 'account_event' %}">Moje závody</a></li>
+            <!--<li><a class="dropdown-item" href="#">Můj oddíl</a></li>
+            <li><a class="dropdown-item" href="#">Moje finance</a></li>-->
+            <li><a class="dropdown-item {% if request.path == '/ucet/' %}active{% endif %}" href="{% url 'account' %}">Nastavení</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'logout' %}">Odhlásit se</a></li>
+          </ul>
+        </div>
+      </div>
+    </header>
+  </div>
+  {% else %}
+  <div class="container">
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+        <div class="col-md-3 mb-2 mb-md-0">
+            <a href="{% url 'home' %}" target="_self"><img src="{% static 'logo.png' %}" alt="logo ROBISU" height="40px"></a>
+        </div>
+      <ul class="nav nav-pills">
+        <li class="nav-item"><a href="{% url 'home' %}" class="nav-link active" aria-current="page">Kalendář závodů</a></li>
+        <!--<li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Žebříčky</a>
+          <ul class="dropdown-menu shadow">
+            <li><a class="dropdown-item" href="#">Národní žebříček</a></li>
+            <li><a class="dropdown-item" href="#">Nominační žebříčky</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Archiv</a></li>
+          </ul>
+        </li>-->
+        <li class="nav-item"><a href="#" class="nav-link">Oddíly</a></li>
+        <li class="nav-item"><a href="{% url 'napoveda' %}" class="nav-link">Nápověda</a></li>
+      </ul>
+      
+      <div class="col-md-3 text-end" style="width:auto!important;">
+        <a href="{% url 'login' %}"><button type="button" class="btn btn-outline-primary me-2">Přihlásit se</button></a>
+        <a href="{% url 'register' %}"><button type="button" class="btn btn-primary">Zaregistrovat se</button></a>
+      </div>
+    </header>
+  </div>
+  {% endif %}
+
+<div class="container"> <!--počátek div container, ukončení je ve footeru--> 
